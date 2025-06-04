@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['Merriweather', 'Georgia', 'serif'],
+      },
       colors: {
         primary: {
           50: '#f0f9ff',
@@ -43,10 +47,6 @@ export default {
           800: '#9d174d',
           900: '#831843',
         },
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Merriweather', 'serif'],
       },
     },
   },
