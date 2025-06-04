@@ -13,6 +13,7 @@ const ContactForm = () => {
   const [formStatus, setFormStatus] = useState({
     submitted: false,
     error: false,
+    loading: false,
   });
 
   const handleChange = (e) => {
@@ -23,41 +24,50 @@ const ContactForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setFormStatus({ ...formStatus, loading: true });
     
-    // In a real implementation, you would send this data to a server
-    // For now, we'll simulate a successful submission
-    
-    // Construct email body
-    const emailBody = `
-      Name: ${formData.name}
-      Email: ${formData.email}
-      Phone: ${formData.phone}
-      Preferred Contact Method: ${formData.preferredContact}
-      Message: ${formData.message}
-    `;
-    
-    // Create mailto link
-    const mailtoLink = `mailto:caro.m.blum@hotmail.co.uk?subject=Therapy Consultation Request from ${formData.name}&body=${encodeURIComponent(emailBody)}`;
-    
-    // Open email client
-    window.location.href = mailtoLink;
-    
-    // Set form as submitted
-    setFormStatus({
-      submitted: true,
-      error: false,
-    });
-    
-    // Reset form after submission
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      message: '',
-      preferredContact: 'email',
-    });
+    try {
+      // Option 1: Email client approach (fallback)
+      // Construct email body
+      const emailBody = `
+        Name: ${formData.name}
+        Email: ${formData.email}
+        Phone: ${formData.phone}
+        Preferred Contact Method: ${formData.preferredContact}
+        Message: ${formData.message}
+      `;
+      
+      // Create mailto link
+      const mailtoLink = `mailto:caro.m.blum@hotmail.co.uk?subject=Therapy Consultation Request from ${formData.name}&body=${encodeURIComponent(emailBody)}`;
+      
+      // Open email client
+      window.location.href = mailtoLink;
+      
+      // Set form as submitted
+      setFormStatus({
+        submitted: true,
+        error: false,
+        loading: false,
+      });
+      
+      // Reset form after submission
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+        preferredContact: 'email',
+      });
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setFormStatus({
+        submitted: false,
+        error: true,
+        loading: false,
+      });
+    }
   };
 
   return (
@@ -80,7 +90,7 @@ const ContactForm = () => {
             Your consultation request has been sent. Caroline will get back to you soon.
           </p>
           <button
-            onClick={() => setFormStatus({ submitted: false, error: false })}
+            onClick={() => setFormStatus({ submitted: false, error: false, loading: false })}
             className="btn btn-secondary"
           >
             Send Another Message
@@ -89,6 +99,12 @@ const ContactForm = () => {
       ) : (
         <form onSubmit={handleSubmit}>
           <h3 className="text-2xl font-serif font-bold text-secondary-900 mb-6">Book a Consultation</h3>
+          
+          {formStatus.error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
+              There was an error sending your message. Please try again or contact Caroline directly via email.
+            </div>
+          )}
           
           <div className="mb-4">
             <label htmlFor="name" className="block text-secondary-700 mb-2">Full Name</label>
@@ -174,8 +190,20 @@ const ContactForm = () => {
           </div>
           
           <div className="text-center">
-            <button type="submit" className="btn btn-primary w-full md:w-auto">
-              Send Consultation Request
+            <button 
+              type="submit" 
+              className="btn btn-primary w-full md:w-auto"
+              disabled={formStatus.loading}
+            >
+              {formStatus.loading ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Sending...
+                </span>
+              ) : "Send Consultation Request"}
             </button>
           </div>
           

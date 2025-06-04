@@ -7,12 +7,13 @@ const ContactPage = () => {
     email: '',
     phone: '',
     message: '',
+    preferredContact: 'email',
   });
 
   const [formStatus, setFormStatus] = useState({
     submitted: false,
     error: false,
-    message: '',
+    loading: false,
   });
 
   const handleChange = (e) => {
@@ -23,15 +24,51 @@ const ContactPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In a real application, you would send the form data to a server
-    // For this demo, we'll simulate a successful submission
-    setFormStatus({
-      submitted: true,
-      error: false,
-      message: 'Thank you for your message. I will get back to you soon!'
-    });
+    setFormStatus({ ...formStatus, loading: true });
+    
+    try {
+      // Construct email body
+      const emailBody = `
+        Name: ${formData.name}
+        Email: ${formData.email}
+        Phone: ${formData.phone}
+        Preferred Contact Method: ${formData.preferredContact || 'Not specified'}
+        Message: ${formData.message}
+      `;
+      
+      // Create mailto link
+      const mailtoLink = `mailto:caroline@carolineblum.co.uk?subject=Therapy Inquiry from ${formData.name}&body=${encodeURIComponent(emailBody)}`;
+      
+      // Open email client
+      window.location.href = mailtoLink;
+      
+      // Set form as submitted
+      setFormStatus({
+        submitted: true,
+        error: false,
+        loading: false,
+        message: 'Thank you for your message. I will get back to you soon!'
+      });
+      
+      // Reset form after submission
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+        preferredContact: 'email',
+      });
+    } catch (error) {
+      console.error('Form submission error:', error);
+      setFormStatus({
+        submitted: false,
+        error: true,
+        loading: false,
+        message: 'There was an error sending your message. Please try again or contact directly via email.'
+      });
+    }
   };
 
   return (
@@ -151,11 +188,30 @@ const ContactPage = () => {
                 </h2>
 
                 {formStatus.submitted ? (
-                  <div className="bg-primary-50 border border-primary-100 text-primary-700 p-4 rounded-lg">
-                    {formStatus.message}
+                  <div className="bg-primary-50 border border-primary-100 text-primary-700 p-6 rounded-lg text-center">
+                    <div className="bg-primary-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-600">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-serif font-bold text-secondary-900 mb-2">Thank You!</h3>
+                    <p className="mb-6">{formStatus.message}</p>
+                    <button
+                      onClick={() => setFormStatus({ submitted: false, error: false, loading: false })}
+                      className="btn btn-secondary"
+                    >
+                      Send Another Message
+                    </button>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit}>
+                    {formStatus.error && (
+                      <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-md">
+                        {formStatus.message || 'There was an error sending your message. Please try again or contact directly via email.'}
+                      </div>
+                    )}
+                    
                     <div className="mb-4">
                       <label htmlFor="name" className="block text-secondary-700 mb-2">Name</label>
                       <input
@@ -193,6 +249,34 @@ const ContactPage = () => {
                         className="w-full px-4 py-2 border border-secondary-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       />
                     </div>
+                    
+                    <div className="mb-4">
+                      <label className="block text-secondary-700 mb-2">Preferred Contact Method</label>
+                      <div className="flex space-x-4">
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="preferredContact"
+                            value="email"
+                            checked={formData.preferredContact === 'email'}
+                            onChange={handleChange}
+                            className="mr-2 text-primary-600 focus:ring-primary-500"
+                          />
+                          Email
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="preferredContact"
+                            value="phone"
+                            checked={formData.preferredContact === 'phone'}
+                            onChange={handleChange}
+                            className="mr-2 text-primary-600 focus:ring-primary-500"
+                          />
+                          Phone
+                        </label>
+                      </div>
+                    </div>
 
                     <div className="mb-6">
                       <label htmlFor="message" className="block text-secondary-700 mb-2">Message</label>
@@ -207,8 +291,20 @@ const ContactPage = () => {
                       ></textarea>
                     </div>
 
-                    <button type="submit" className="btn btn-primary w-full">
-                      Send Message
+                    <button 
+                      type="submit" 
+                      className="btn btn-primary w-full"
+                      disabled={formStatus.loading}
+                    >
+                      {formStatus.loading ? (
+                        <span className="flex items-center justify-center">
+                          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Sending...
+                        </span>
+                      ) : "Send Message"}
                     </button>
                   </form>
                 )}

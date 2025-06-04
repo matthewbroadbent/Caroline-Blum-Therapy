@@ -5,28 +5,92 @@ import CtaSection from '../components/CtaSection';
 const ServicesPage = () => {
   return (
     <>
-      <section className="pt-32 pb-16 md:pt-40 md:pb-24 bg-primary-50">
-        <div className="container">
+      <section className="relative pt-40 pb-24 md:pt-48 md:pb-32 overflow-hidden">
+        {/* Background image with overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://images.pexels.com/photos/7176319/pexels-photo-7176319.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+            alt="Therapy background" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary-900/70 to-primary-800/80"></div>
+        </div>
+        
+        {/* Content */}
+        <div className="container relative z-10">
           <div className="max-w-3xl mx-auto text-center">
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="inline-block px-4 py-1.5 mb-6 rounded-full bg-white/20 backdrop-blur-sm text-white font-medium"
+            >
+              Professional Therapy Services
+            </motion.span>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-4xl md:text-5xl font-serif font-bold text-secondary-900 mb-6"
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-6"
             >
               Therapy Services
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-xl text-secondary-600"
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-xl text-white/90 mb-8"
             >
-              Professional counselling and psychotherapy to help you navigate life's challenges
+              Professional counselling and psychotherapy to help you navigate life's challenges and find your path to wellbeing
             </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <Link to="/contact" className="btn btn-white">
+                Book Your First Session
+              </Link>
+            </motion.div>
           </div>
         </div>
+        
+        {/* Decorative elements */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent z-10"></div>
+        <div className="absolute -bottom-1 left-0 right-0 h-1 bg-white z-10"></div>
       </section>
+
+      {/* Visual separator */}
+      <div className="py-12 bg-white">
+        <div className="container">
+          <div className="flex justify-center items-center gap-8">
+            <div className="hidden md:flex items-center gap-3 px-6 py-3 rounded-lg bg-primary-50">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-600">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+              </svg>
+              <span className="text-primary-700 font-medium">Compassionate Care</span>
+            </div>
+            
+            <div className="hidden md:flex items-center gap-3 px-6 py-3 rounded-lg bg-primary-50">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-600">
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span className="text-primary-700 font-medium">BACP Registered</span>
+            </div>
+            
+            <div className="flex items-center gap-3 px-6 py-3 rounded-lg bg-primary-50">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary-600">
+                <path d="M8 3v3a2 2 0 0 1-2 2H3"></path>
+                <path d="M21 8h-3a2 2 0 0 1-2-2V3"></path>
+                <path d="M3 16h3a2 2 0 0 1 2 2v3"></path>
+                <path d="M16 21v-3a2 2 0 0 1 2-2h3"></path>
+              </svg>
+              <span className="text-primary-700 font-medium">Personalized Approach</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <section className="py-16 md:py-24 bg-secondary-50">
         <div className="container">
