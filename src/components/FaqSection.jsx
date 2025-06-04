@@ -75,6 +75,8 @@ const FaqSection = () => {
                     ? 'bg-primary-50 shadow-sm border border-primary-100' 
                     : 'bg-secondary-50 hover:bg-primary-50/50 border border-secondary-100'
                 }`}
+                aria-expanded={openIndex === index}
+                aria-controls={`faq-answer-${index}`}
               >
                 <span className="font-serif font-bold text-lg text-secondary-900">{faq.question}</span>
                 <svg 
@@ -88,14 +90,17 @@ const FaqSection = () => {
                   strokeLinecap="round" 
                   strokeLinejoin="round" 
                   className={`text-primary-600 transition-transform ${openIndex === index ? 'rotate-180' : ''}`}
+                  aria-hidden="true"
                 >
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </button>
               <div 
+                id={`faq-answer-${index}`}
                 className={`overflow-hidden transition-all duration-300 ease-in-out ${
                   openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                 }`}
+                aria-hidden={openIndex !== index}
               >
                 <div className="p-6 pt-4 text-secondary-700">
                   {faq.answer}
