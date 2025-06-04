@@ -40,7 +40,7 @@ const ContactForm = () => {
       `;
       
       // Create mailto link
-      const mailtoLink = `mailto:caro.m.blum@hotmail.co.uk?subject=Therapy Consultation Request from ${formData.name}&body=${encodeURIComponent(emailBody)}`;
+      const mailtoLink = `mailto:caroline@carolineblum.co.uk?subject=Therapy Consultation Request from ${formData.name}&body=${encodeURIComponent(emailBody)}`;
       
       // Open email client
       window.location.href = mailtoLink;
